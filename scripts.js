@@ -87,36 +87,32 @@ function listLabels() {
  *
  * @param {string} message Text to be placed in pre element.
  */
-function appendPre(message) {
-  var pre = document.getElementById('output');
-  var textContent = document.createTextNode(message + '\n');
-  pre.appendChild(textContent);
-}
+// function appendPre(message) {
+//   var pre = document.getElementById('output');
+//   var textContent = document.createTextNode(message + '\n');
+//   pre.appendChild(textContent);
+// }
 
 /**
  * Get all the message IDs with specific query in the authenticated user's inbox.
  */
 function listMessages() {
   var userId = "me";
-  var query = "subject:distribution"
+  var query = "subject:(Your trip with Uber)"
   var request = gapi.client.gmail.users.messages.list({
     'userId': userId,
     'q': query
   });
   request.execute(function(resp) {
     var messages = resp.messages;
-    var output = "" + messages.length + " messages with " + query + "<br>";
-    for(var i = 0; i < messages.length; i++) {
-      output += messages[i].id + "<br>";
+    if (messages && messages.length > 0) {
+      var messageNumber = "" + messages.length + " messages with " + query + "<br>";
+      // for(var i = 0; i < messages.length; i++) {
+      //   output += messages[i].id + "<br>";
+      // }
+    } else {
+      var messageNumber = "No messages with " + query + " found"
     }
-    document.getElementById("content").innerHTML += output;
+    document.getElementById("content").innerHTML += messageNumber;
   });
-}
-
-function getMessage(userId, messageId, callback) {
-  var request = gapi.client.gmail.users.messages.get({
-    'userId': userId,
-    'id': messageId
-  });
-  request.execute(callback);
 }
